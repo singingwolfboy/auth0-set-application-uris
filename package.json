@@ -1,33 +1,38 @@
 {
-  "name": "typescript-action",
+  "name": "auth0-set-application-uris",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Add & remove application URIs for Auth0 applications",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint src/**/*.ts --fix",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/singingwolfboy/auth0-set-application-uris.git"
   },
   "keywords": [
-    "actions",
-    "node",
-    "setup"
+    "auth0",
+    "oauth"
   ],
-  "author": "",
+  "author": "David Baumgold <david@davidbaumgold.com>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.10.0"
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "@octokit/webhooks-types": "^6.7.0",
+    "auth0": "^2.44.0",
+    "mustache": "^4.2.0"
   },
   "devDependencies": {
+    "@types/auth0": "^2.35.7",
+    "@types/mustache": "^4.2.1",
     "@types/node": "^18.11.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vercel/ncc": "^0.31.1",

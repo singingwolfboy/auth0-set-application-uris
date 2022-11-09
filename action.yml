@@ -1,6 +1,9 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Set Application URIs for Auth0'
+description: 'Add & remove application URIs for Auth0 applications'
+author: 'David Baumgold <david@davidbaumgold.com>'
+branding:
+  color: white
+  icon: lock
 inputs:
   milliseconds: # change this
     required: true
