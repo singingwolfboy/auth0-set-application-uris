@@ -1,20 +1,54 @@
-import {ManagementClient} from 'auth0'
+import {Client, ManagementClient} from 'auth0'
 
 interface Urls {
-  callback: string
-  logout: string
+  callback?: string
+  logout?: string
 }
 
 export async function addUrls(
-  client: ManagementClient,
+  auth0: ManagementClient,
+  targetClientId: string,
   {callback: callbackUrl, logout: logoutUrl}: Urls
-): Promise<void> {
-  return
+): Promise<Client> {
+  const params = {client_id: targetClientId}
+  const client = await auth0.getClient(params)
+  const updates: Partial<Client> = {}
+  if (callbackUrl) {
+    const callbacks = client.callbacks || []
+    callbacks.push(callbackUrl)
+    updates.callbacks = callbacks
+  }
+  if (logoutUrl) {
+    const logouts = client.allowed_logout_urls || []
+    logouts.push(logoutUrl)
+    updates.allowed_logout_urls = logouts
+  }
+  return auth0.updateClient(params, updates)
 }
 
 export async function removeUrls(
-  client: ManagementClient,
+  auth0: ManagementClient,
+  targetClientId: string,
   {callback: callbackUrl, logout: logoutUrl}: Urls
-): Promise<void> {
-  return
+): Promise<Client> {
+  const params = {client_id: targetClientId}
+  const client = await auth0.getClient(params)
+  const updates: Partial<Client> = {}
+  if (callbackUrl) {
+    const callbacks = client.callbacks || []
+    const index = callbacks.indexOf(callbackUrl)
+    if (index > -1) {
+      callbacks.splice(index, 1)
+      updates.callbacks = callbacks
+    }
+  }
+  if (logoutUrl) {
+    const logouts = client.allowed_logout_urls || []
+    const index = logouts.indexOf(logoutUrl)
+    if (index > -1) {
+      logouts.splice(index, 1)
+      updates.allowed_logout_urls = logouts
+    }
+  }
+  return auth0.updateClient(params, updates)
 }

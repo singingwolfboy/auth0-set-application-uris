@@ -5,10 +5,24 @@ branding:
   color: white
   icon: lock
 inputs:
-  milliseconds: # change this
+  auth0-domain:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'The domain of your Auth0 application'
+  auth0-client-id:
+    required: true
+    description: 'The client ID of your Auth0 application'
+  auth0-client-secret:
+    required: true
+    description: 'The client secret of your Auth0 application'
+  auth0-target-client-id:
+    required: false
+    description: 'The client ID of the Auth0 application you wish to modify. Defaults to the value of `auth0-client-id`.'
+  callback-url-template:
+    required: true
+    description: 'A Mustache template for the callback URL to add/remove'
+  logout-url-template:
+    required: true
+    description: 'A Mustache template for the logout URL to add/remove'
 runs:
   using: 'node16'
   main: 'dist/index.js'

@@ -26,25 +26,28 @@ async function run(): Promise<void> {
     })
     const urls = {
       callback: callbackUrl,
-      logout: logoutUrl,
+      logout: logoutUrl
     }
 
     const domain = core.getInput('auth0-domain', {required: true})
     const clientId = core.getInput('auth0-client-id', {required: true})
     const clientSecret = core.getInput('auth0-client-secret', {required: true})
-    const client = new ManagementClient({
+    const auth0Client = new ManagementClient({
       domain,
       clientId,
       clientSecret,
       scope: 'read:clients update:clients'
     })
+    const targetClientId = core.getInput('auth0-target-client-id') || clientId
 
     switch (payload.action) {
       case 'opened':
       case 'reopened':
-        return addUrls(client, urls)
+        await addUrls(auth0Client, targetClientId, urls)
+        return
       case 'closed':
-        return removeUrls(client, urls)
+        await removeUrls(auth0Client, targetClientId, urls)
+        return
       default:
         core.setFailed(
           'This action only works with the `opened`, `reopened`, and `closed` actions for `pull_request` events'
