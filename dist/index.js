@@ -146,11 +146,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.removeUrls = exports.addUrls = void 0;
 const core = __importStar(__nccwpck_require__(2186));
+function getErrorMessage(error) {
+    if (error instanceof Error)
+        return error.message;
+    return String(error);
+}
 function addUrls(auth0, targetClientId, { callback: callbackUrl, logout: logoutUrl }) {
     return __awaiter(this, void 0, void 0, function* () {
         const params = { client_id: targetClientId };
-        const client = yield auth0.getClient(params);
-        core.debug(`client: ${client.name}`);
+        let client;
+        try {
+            client = yield auth0.getClient(params);
+        }
+        catch (err) {
+            const message = getErrorMessage(err);
+            core.error(`Unable to get Auth0 application: ${message}`);
+            throw err;
+        }
         const updates = {};
         if (callbackUrl) {
             const callbacks = client.callbacks || [];
@@ -181,8 +193,15 @@ exports.addUrls = addUrls;
 function removeUrls(auth0, targetClientId, { callback: callbackUrl, logout: logoutUrl }) {
     return __awaiter(this, void 0, void 0, function* () {
         const params = { client_id: targetClientId };
-        const client = yield auth0.getClient(params);
-        core.debug(`client: ${client.name}`);
+        let client;
+        try {
+            client = yield auth0.getClient(params);
+        }
+        catch (err) {
+            const message = getErrorMessage(err);
+            core.error(`Unable to get Auth0 application: ${message}`);
+            throw err;
+        }
         const updates = {};
         if (callbackUrl) {
             const callbacks = client.callbacks || [];

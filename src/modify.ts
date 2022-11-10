@@ -6,14 +6,25 @@ interface Urls {
   logout?: string
 }
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message
+  return String(error)
+}
+
 export async function addUrls(
   auth0: ManagementClient,
   targetClientId: string,
   {callback: callbackUrl, logout: logoutUrl}: Urls
-): Promise<Client> {
+): Promise<Client | void> {
   const params = {client_id: targetClientId}
-  const client = await auth0.getClient(params)
-  core.debug(`client: ${client.name}`)
+  let client
+  try {
+    client = await auth0.getClient(params)
+  } catch (err) {
+    const message = getErrorMessage(err)
+    core.error(`Unable to get Auth0 application: ${message}`)
+    throw err
+  }
   const updates: Partial<Client> = {}
   if (callbackUrl) {
     const callbacks = client.callbacks || []
@@ -45,8 +56,14 @@ export async function removeUrls(
   {callback: callbackUrl, logout: logoutUrl}: Urls
 ): Promise<Client> {
   const params = {client_id: targetClientId}
-  const client = await auth0.getClient(params)
-  core.debug(`client: ${client.name}`)
+  let client
+  try {
+    client = await auth0.getClient(params)
+  } catch (err) {
+    const message = getErrorMessage(err)
+    core.error(`Unable to get Auth0 application: ${message}`)
+    throw err
+  }
   const updates: Partial<Client> = {}
   if (callbackUrl) {
     const callbacks = client.callbacks || []
