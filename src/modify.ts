@@ -17,16 +17,26 @@ export async function addUrls(
   const updates: Partial<Client> = {}
   if (callbackUrl) {
     const callbacks = client.callbacks || []
-    callbacks.push(callbackUrl)
-    updates.callbacks = callbacks
+    const index = callbacks.indexOf(callbackUrl)
+    if (index === -1) {
+      callbacks.push(callbackUrl)
+      updates.callbacks = callbacks
+    }
   }
   if (logoutUrl) {
     const logouts = client.allowed_logout_urls || []
-    logouts.push(logoutUrl)
-    updates.allowed_logout_urls = logouts
+    const index = logouts.indexOf(logoutUrl)
+    if (index === -1) {
+      logouts.push(logoutUrl)
+      updates.allowed_logout_urls = logouts
+    }
   }
-  core.debug(`updates: ${JSON.stringify(updates)}`)
-  return auth0.updateClient(params, updates)
+  if (Object.keys(updates).length > 0) {
+    core.debug(`updates: ${JSON.stringify(updates)}`)
+    return auth0.updateClient(params, updates)
+  } else {
+    return client
+  }
 }
 
 export async function removeUrls(
@@ -54,6 +64,10 @@ export async function removeUrls(
       updates.allowed_logout_urls = logouts
     }
   }
-  core.debug(`updates: ${JSON.stringify(updates)}`)
-  return auth0.updateClient(params, updates)
+  if (Object.keys(updates).length > 0) {
+    core.debug(`updates: ${JSON.stringify(updates)}`)
+    return auth0.updateClient(params, updates)
+  } else {
+    return client
+  }
 }
