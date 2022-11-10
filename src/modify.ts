@@ -1,3 +1,4 @@
+import * as core from '@actions/core'
 import {Client, ManagementClient} from 'auth0'
 
 interface Urls {
@@ -12,6 +13,7 @@ export async function addUrls(
 ): Promise<Client> {
   const params = {client_id: targetClientId}
   const client = await auth0.getClient(params)
+  core.debug(`client: ${client.name}`)
   const updates: Partial<Client> = {}
   if (callbackUrl) {
     const callbacks = client.callbacks || []
@@ -23,6 +25,7 @@ export async function addUrls(
     logouts.push(logoutUrl)
     updates.allowed_logout_urls = logouts
   }
+  core.debug(`updates: ${JSON.stringify(updates)}`)
   return auth0.updateClient(params, updates)
 }
 
@@ -33,6 +36,7 @@ export async function removeUrls(
 ): Promise<Client> {
   const params = {client_id: targetClientId}
   const client = await auth0.getClient(params)
+  core.debug(`client: ${client.name}`)
   const updates: Partial<Client> = {}
   if (callbackUrl) {
     const callbacks = client.callbacks || []
@@ -50,5 +54,6 @@ export async function removeUrls(
       updates.allowed_logout_urls = logouts
     }
   }
+  core.debug(`updates: ${JSON.stringify(updates)}`)
   return auth0.updateClient(params, updates)
 }

@@ -8,7 +8,7 @@ test('empty addUrls', async () => {
     clientId: 'fake-id',
     clientSecret: 'fake-secret'
   })
-  const result = await addUrls(auth0, 'fake-id', {})
+  const result = await addUrls(auth0, 'fake-target-id', {})
   await expect(result).rejects.toThrow('unknown')
 })
 
@@ -18,6 +18,6 @@ test('empty removeUrls', async () => {
     clientId: 'fake-id',
     clientSecret: 'fake-secret'
   })
-  const result = await removeUrls(auth0, 'fake-id', {})
+  const result = await removeUrls(auth0, 'fake-target-id', {})
   await expect(result).rejects.toThrow('unknown')
 })

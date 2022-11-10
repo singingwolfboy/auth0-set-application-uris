@@ -28,6 +28,7 @@ async function run(): Promise<void> {
       callback: callbackUrl,
       logout: logoutUrl
     }
+    core.info(JSON.stringify(urls))
 
     const domain = core.getInput('auth0-domain', {required: true})
     const clientId = core.getInput('auth0-client-id', {required: true})
