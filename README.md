@@ -48,7 +48,7 @@ jobs:
     name: Set Application URIs
     runs-on: ubuntu-latest
     steps:
-      - uses: singingwolfboy/auth0-set-application-uris@main
+      - uses: singingwolfboy/auth0-set-application-uris@v1
         with:
           auth0-domain: ${{ secrets.AUTH0_DOMAIN }}
           auth0-client-id: ${{ secrets.AUTH0_CLIENT_ID }}
